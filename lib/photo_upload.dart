@@ -30,6 +30,7 @@ class _PhotoUploadState extends State<PhotoUpload> {
         file = result;
         running = null;
       });
+      return;
     }
     print("No image selected");
     setState(() {
@@ -81,14 +82,13 @@ class _PhotoUploadState extends State<PhotoUpload> {
     return FutureBuilder(
         future: running,
         builder: (context, snapshot) {
+          List<Widget> children;
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator(
+            children = <Widget>[const CircularProgressIndicator(
               strokeWidth: 20,
-            );
-          }
-
-          return Column(
-            children: [
+            )];
+          } else {
+            children = [
               file != null ? Image.file(file!) : const Text("No photo"),
               ElevatedButton(
                   onPressed: () {
@@ -97,7 +97,11 @@ class _PhotoUploadState extends State<PhotoUpload> {
                     });
                   },
                   child: const Text("Upload")),
-            ],
+            ];
+          }
+
+          return Column(
+            children: children,
           );
         });
   }
